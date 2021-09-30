@@ -1,3 +1,4 @@
+require 'pry'
 # Write your code below game_hash
 def game_hash
   {
@@ -127,3 +128,73 @@ def game_hash
 end
 
 # Write code here
+def home
+  game_hash[:home]
+end
+
+def away
+  game_hash[:away]
+end
+
+def find_team(team_name)
+  team_info = game_hash.find {|location, team_data| team_data[:team_name] == team_name}
+  team_info[1]
+end
+
+def players
+  home[:players] + away[:players]
+end
+
+def player_stats(player_name)
+  players.find {|player| player[:player_name] == player_name}
+end
+
+def num_points_scored(player_name)
+  player_stats(player_name)[:points]
+end
+
+def shoe_size(player_name)
+  player_stats(player_name)[:shoe]
+end
+
+def team_colors(team_name)
+  find_team(team_name)[:colors]
+end
+
+def team_names
+  [home[:team_name], away[:team_name]]
+end
+
+def player_numbers(team_name)
+  team = find_team(team_name)
+  team[:players].map { |player| player[:number]}
+end
+
+def biggest_shoe
+  players.max_by { |player| player[:shoe] }
+end
+
+def big_shoe_rebounds
+  biggest_shoe[:rebounds]
+end
+
+def most_points_scored
+  mvp = players.max_by { |player| player[:points] }
+  mvp[:player_name]
+end
+
+def winning_team
+  team = game_hash.max_by do |location, team_data|
+    team_data[:players].sum { |player| player[:points] }
+  end
+  team[1][:team_name]
+end
+
+def player_with_longest_name
+  players.max_by { |player| player[:player_name].length}
+end
+
+def long_name_steals_a_ton?
+  most_steals = players.max_by { |player| player[:steals]}
+  most_steals[:player_name] == player_with_longest_name[:player_name]
+end
